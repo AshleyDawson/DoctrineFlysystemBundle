@@ -1,0 +1,58 @@
+<?php
+
+namespace AshleyDawson\DoctrineFlysystemBundle\ORM\Mapping;
+
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
+
+/**
+ * Class StorableFieldMapper
+ *
+ * @package AshleyDawson\DoctrineFlysystemBundle\ORM\Mapping
+ */
+class StorableFieldMapper implements StorableFieldMapperInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function mapFields(ClassMetadataInfo $classMetadata)
+    {
+        $classMetadata
+            ->mapField([
+                'fieldName' => 'fileName',
+                'columnName' => 'file_name',
+                'type' => 'string',
+                'length' => 255,
+                'nullable' => true,
+            ])
+        ;
+
+        $classMetadata
+            ->mapField([
+                'fieldName' => 'fileStoragePath',
+                'columnName' => 'file_storage_path',
+                'type' => 'string',
+                'length' => 255,
+                'nullable' => true,
+            ])
+        ;
+
+        $classMetadata
+            ->mapField([
+                'fieldName' => 'fileSize',
+                'columnName' => 'file_size',
+                'type' => 'integer',
+                'nullable' => true,
+            ])
+        ;
+
+        $classMetadata
+            ->mapField([
+                'fieldName' => 'fileMimeType',
+                'columnName' => 'file_mime_type',
+                'type' => 'string',
+                'length' => 60,
+                'nullable' => true,
+            ])
+        ;
+    }
+}
