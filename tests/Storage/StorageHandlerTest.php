@@ -4,11 +4,15 @@ namespace AshleyDawson\DoctrineFlysystemBundle\Tests\Storage;
 
 use AshleyDawson\DoctrineFlysystemBundle\ORM\StorableTrait;
 use AshleyDawson\DoctrineFlysystemBundle\Storage\StorageHandler;
+use AshleyDawson\DoctrineFlysystemBundle\Tests\AbstractDoctrineTestCase;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class StorableTraitImpl
  *
  * @package AshleyDawson\DoctrineFlysystemBundle\Tests\ORM
+ *
+ * @ORM\Entity
  */
 class StorableTraitImpl
 {
@@ -38,7 +42,7 @@ class DummyImpl
  *
  * @package AshleyDawson\DoctrineFlysystemBundle\Tests\Storage
  */
-class StorageHandlerTest extends \PHPUnit_Framework_TestCase
+class StorageHandlerTest extends AbstractDoctrineTestCase
 {
     /**
      * @var StorageHandler
@@ -71,5 +75,18 @@ class StorageHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertNotTrue(
             $this->_storageHandler->isEntitySupported('AshleyDawson\DoctrineFlysystemBundle\Tests\Storage\FooBarNotHere')
         );
+    }
+
+    /**
+     * Get an array of entity class names that the entity
+     * manager should operate on
+     *
+     * @return array
+     */
+    protected function getEntityClassNames()
+    {
+        return [
+            'AshleyDawson\DoctrineFlysystemBundle\Tests\Storage\StorableTraitImpl',
+        ];
     }
 }
