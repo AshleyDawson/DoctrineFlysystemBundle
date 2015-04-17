@@ -1,0 +1,34 @@
+{
+  "name": "ashleydawson/doctrine-flysystem-bundle",
+  "type": "symfony-bundle",
+  "description": "Add a flysystem storage behaviour to Doctrine entities",
+  "keywords": [
+    "behaviors",
+    "doctrine2",
+    "extensions",
+    "ashleydawson",
+    "flysystem",
+    "storage",
+    "store"
+  ],
+  "authors": [
+    {
+      "name": "Ashley Dawson",
+      "email": "ashley@ashleydawson.co.uk"
+    }
+  ],
+  "require": {
+    "php": ">=5.3",
+    "symfony/symfony": "~2.3",
+    "doctrine/orm": "~2.3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.2.6"
+  },
+  "autoload": {
+    "psr-4": { "AshleyDawson\\DoctrineFlysystemBundle\\": "src" }
+  },
+  "config": {
+    "bin-dir": "bin"
+  }
+}
