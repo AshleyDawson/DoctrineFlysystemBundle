@@ -9,7 +9,7 @@ use AshleyDawson\DoctrineFlysystemBundle\Exception\EntityNotUsingStorableTraitEx
 use AshleyDawson\DoctrineFlysystemBundle\Exception\FailedToWriteFileException;
 use AshleyDawson\DoctrineFlysystemBundle\Exception\FilesystemNotFoundException;
 use League\Flysystem\FilesystemInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use League\Flysystem\MountManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -25,9 +25,9 @@ class StorageHandler implements StorageHandlerInterface
     private $_entityClassSupported = [];
 
     /**
-     * @var ContainerInterface
+     * @var MountManager
      */
-    private $_container;
+    private $_mountManager;
 
     /**
      * @var EventDispatcherInterface
@@ -42,14 +42,14 @@ class StorageHandler implements StorageHandlerInterface
     /**
      * Constructor
      *
-     * @param ContainerInterface $container
+     * @param MountManager $mountManager
      * @param EventDispatcherInterface $eventDispatcher
-     * @param bool $canDeleteOldFile
+     * @param $canDeleteOldFile
      */
-    public function __construct(ContainerInterface $container, EventDispatcherInterface $eventDispatcher,
+    public function __construct(MountManager $mountManager, EventDispatcherInterface $eventDispatcher,
                                 $canDeleteOldFile)
     {
-        $this->_container = $container;
+        $this->_mountManager = $mountManager;
         $this->_eventDispatcher = $eventDispatcher;
         $this->_canDeleteOldFile = $canDeleteOldFile;
     }
@@ -72,7 +72,7 @@ class StorageHandler implements StorageHandlerInterface
         }
 
         /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile */
-        $uploadedFile = $entity->getUplaodedFile();
+        $uploadedFile = $entity->getUploadedFile();
 
         $event = (new StoreEvent())
             ->setFileName($uploadedFile->getClientOriginalName())
@@ -96,8 +96,8 @@ class StorageHandler implements StorageHandlerInterface
 
         if ( ! $hasWrittenFile) {
             throw new FailedToWriteFileException(
-                sprintf('Failed to write file %s using the filesystem with alias %s',
-                    $event->getFileStoragePath(), $entity->getFilesystemAlias())
+                sprintf('Failed to write file %s using the filesystem with mount prefix %s',
+                    $event->getFileStoragePath(), $entity->getFilesystemMountPrefix())
             );
         }
 
@@ -147,11 +147,11 @@ class StorageHandler implements StorageHandlerInterface
                 sprintf('Class %s is not using the StorableTrait', get_class($entity)));
         }
 
-        $filesystem = $this->_container->get($entity->getFilesystemAlias());
+        $filesystem = $this->_mountManager->getFilesystem($entity->getFilesystemMountPrefix());
 
         if ( ! ($filesystem instanceof FilesystemInterface)) {
             throw new FilesystemNotFoundException(
-                sprintf('Filesystem with the alias %s could not be found', $entity->getFilesystemAlias()));
+                sprintf('Filesystem with the alias %s could not be found', $entity->getFilesystemMountPrefix()));
         }
 
         return $filesystem;

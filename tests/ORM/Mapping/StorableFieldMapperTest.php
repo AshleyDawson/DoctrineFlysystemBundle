@@ -15,9 +15,9 @@ class StorableTraitImpl
 {
     use StorableTrait;
 
-    public function getFilesystemAlias()
+    public function getFilesystemMountPrefix()
     {
-        return 'dummy_filesystem_id';
+        return 'dummy_filesystem_mount_prefix';
     }
 }
 

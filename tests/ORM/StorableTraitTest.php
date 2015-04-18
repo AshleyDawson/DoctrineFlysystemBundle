@@ -14,9 +14,9 @@ class StorableTraitImpl
 {
     use StorableTrait;
 
-    public function getFilesystemAlias()
+    public function getFilesystemMountPrefix()
     {
-        return 'dummy_filesystem_id';
+        return 'dummy_filesystem_mount_prefix';
     }
 }
 
@@ -36,28 +36,28 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->_sampleFilePath = __DIR__ . '/../Resources/fixtures/sample.txt';
+        $this->_sampleFilePath = __DIR__ . '/../Resources/fixtures/sample-01.txt';
 
         $this->_storableTraitDummy = (new StorableTraitImpl())
             ->setFileMimeType('text/plain')
-            ->setFileName('sample.txt')
+            ->setFileName('sample-01.txt')
             ->setFileSize(445)
-            ->setFileStoragePath('/foo/sample.txt')
-            ->setUploadedFile(new UploadedFile($this->_sampleFilePath, 'sample.txt'))
+            ->setFileStoragePath('/foo/sample-01.txt')
+            ->setUploadedFile(new UploadedFile($this->_sampleFilePath, 'sample-01.txt'))
         ;
     }
 
-    public function testFilesystemIdPresent()
+    public function testFilesystemMountPrefixPresent()
     {
-        $this->assertEquals('dummy_filesystem_id', $this->_storableTraitDummy->getFilesystemAlias());
+        $this->assertEquals('dummy_filesystem_mount_prefix', $this->_storableTraitDummy->getFilesystemMountPrefix());
     }
 
     public function testAccessors()
     {
         $this->assertEquals('text/plain', $this->_storableTraitDummy->getFileMimeType());
-        $this->assertEquals('sample.txt', $this->_storableTraitDummy->getFileName());
+        $this->assertEquals('sample-01.txt', $this->_storableTraitDummy->getFileName());
         $this->assertEquals(445, $this->_storableTraitDummy->getFileSize());
-        $this->assertEquals('/foo/sample.txt', $this->_storableTraitDummy->getFileStoragePath());
+        $this->assertEquals('/foo/sample-01.txt', $this->_storableTraitDummy->getFileStoragePath());
 
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\File\UploadedFile',
             $this->_storableTraitDummy->getUploadedFile());
