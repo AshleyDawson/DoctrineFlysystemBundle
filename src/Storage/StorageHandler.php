@@ -44,7 +44,7 @@ class StorageHandler implements StorageHandlerInterface
      *
      * @param MountManager $mountManager
      * @param EventDispatcherInterface $eventDispatcher
-     * @param $canDeleteOldFile
+     * @param bool $canDeleteOldFile
      */
     public function __construct(MountManager $mountManager, EventDispatcherInterface $eventDispatcher,
                                 $canDeleteOldFile)
@@ -147,11 +147,12 @@ class StorageHandler implements StorageHandlerInterface
                 sprintf('Class %s is not using the StorableTrait', get_class($entity)));
         }
 
-        $filesystem = $this->_mountManager->getFilesystem($entity->getFilesystemMountPrefix());
-
-        if ( ! ($filesystem instanceof FilesystemInterface)) {
+        try {
+            $filesystem = $this->_mountManager->getFilesystem($entity->getFilesystemMountPrefix());
+        }
+        catch (\LogicException $e) {
             throw new FilesystemNotFoundException(
-                sprintf('Filesystem with the alias %s could not be found', $entity->getFilesystemMountPrefix()));
+                sprintf('Filesystem with the mount prefix %s could not be found', $entity->getFilesystemMountPrefix()), 0, $e);
         }
 
         return $filesystem;

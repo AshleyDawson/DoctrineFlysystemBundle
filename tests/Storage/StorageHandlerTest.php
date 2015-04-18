@@ -29,6 +29,21 @@ class StorableTraitImpl
 }
 
 /**
+ * Class StorableTraitInvalidFilesystemImpl
+ *
+ * @package AshleyDawson\DoctrineFlysystemBundle\Tests\Storage
+ */
+class StorableTraitInvalidFilesystemImpl
+{
+    use StorableTrait;
+
+    public function getFilesystemMountPrefix()
+    {
+        return 'test_local_foo_invalid_bar';
+    }
+}
+
+/**
  * Class DummyImpl
  *
  * @package AshleyDawson\DoctrineFlysystemBundle\Tests\ORM
@@ -151,6 +166,19 @@ class StorageHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('sample-02.txt', $entity->getFileStoragePath());
         $this->assertEquals(334, $entity->getFileSize());
         $this->assertEquals('text/plain', $entity->getFileMimeType());
+    }
+
+    public function testStoreFilesystemCouldNotBeFound()
+    {
+        $this->setExpectedException('AshleyDawson\DoctrineFlysystemBundle\Exception\FilesystemNotFoundException');
+
+        $uploadedFile = $this->_getSampleUploadedFile();
+
+        $entity = (new StorableTraitInvalidFilesystemImpl())
+            ->setUploadedFile($uploadedFile)
+        ;
+
+        $this->_storageHandler->store($entity);
     }
 
     /**
