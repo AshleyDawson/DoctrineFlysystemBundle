@@ -39,9 +39,9 @@ class StoreEvent extends Event
     private $_uploadedFile;
 
     /**
-     * @var FilesystemInterface
+     * @var FilesystemInterface[]
      */
-    private $_filesystem;
+    private $_filesystems;
 
     /**
      * Get _fileName
@@ -154,24 +154,24 @@ class StoreEvent extends Event
     }
 
     /**
-     * Get _filesystem
+     * Get _filesystems
      *
-     * @return FilesystemInterface
+     * @return FilesystemInterface[]
      */
-    public function getFilesystem()
+    public function getFilesystems()
     {
-        return $this->_filesystem;
+        return $this->_filesystems;
     }
 
     /**
-     * Set _filesystem
+     * Set _filesystems
      *
-     * @param FilesystemInterface $filesystem
+     * @param FilesystemInterface[] $filesystems
      * @return StoreEvent
      */
-    public function setFilesystem(FilesystemInterface $filesystem)
+    public function setFilesystems(array $filesystems)
     {
-        $this->_filesystem = $filesystem;
+        $this->_filesystems = $filesystems;
         return $this;
     }
 }

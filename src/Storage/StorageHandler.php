@@ -63,16 +63,10 @@ class StorageHandler implements StorageHandlerInterface
             return;
         }
 
-        $filesystem = $this->_getFilesystemForEntity($entity);
-
-        // Delete previous file if it exists
-        if ($entity->getFileStoragePath() && $filesystem->has($entity->getFileStoragePath()) &&
-            $this->_canDeleteOldFile) {
-            $filesystem->delete($entity->getFileStoragePath());
-        }
-
         /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile */
         $uploadedFile = $entity->getUploadedFile();
+
+        $filesystems = $this->_getFilesystemsForEntity($entity);
 
         $event = (new StoreEvent())
             ->setFileName($uploadedFile->getClientOriginalName())
@@ -80,25 +74,34 @@ class StorageHandler implements StorageHandlerInterface
             ->setFileSize($uploadedFile->getSize())
             ->setFileMimeType($uploadedFile->getMimeType())
             ->setUploadedFile($uploadedFile)
-            ->setFilesystem($filesystem)
+            ->setFilesystems($filesystems)
         ;
 
         $this->_eventDispatcher->dispatch(StorageEvents::PRE_STORE, $event);
 
-        $stream = fopen($uploadedFile->getRealPath(), 'r+');
+        foreach ($filesystems as $prefix => $filesystem) {
 
-        $hasWrittenFile = $event->getFilesystem()->writeStream(
-            $event->getFileStoragePath(),
-            $stream
-        );
+            // Delete previous file if it exists
+            if ($entity->getFileStoragePath() && $filesystem->has($entity->getFileStoragePath()) &&
+                $this->_canDeleteOldFile) {
+                $filesystem->delete($entity->getFileStoragePath());
+            }
 
-        fclose($stream);
+            $stream = fopen($uploadedFile->getRealPath(), 'r+');
 
-        if ( ! $hasWrittenFile) {
-            throw new FailedToWriteFileException(
-                sprintf('Failed to write file %s using the filesystem with mount prefix %s',
-                    $event->getFileStoragePath(), $entity->getFilesystemMountPrefix())
+            $hasWrittenFile = $filesystem->writeStream(
+                $event->getFileStoragePath(),
+                $stream
             );
+
+            fclose($stream);
+
+            if ( ! $hasWrittenFile) {
+                throw new FailedToWriteFileException(
+                    sprintf('Failed to write file %s using the filesystem with mount prefix %s',
+                        $event->getFileStoragePath(), $prefix)
+                );
+            }
         }
 
         $this->_eventDispatcher->dispatch(StorageEvents::POST_STORE, $event);
@@ -120,7 +123,9 @@ class StorageHandler implements StorageHandlerInterface
             return;
         }
 
-        $this->_getFilesystemForEntity($entity)->delete($entity->getFileStoragePath());
+        foreach ($this->_getFilesystemsForEntity($entity) as $filesystem) {
+            $filesystem->delete($entity->getFileStoragePath());
+        }
     }
 
     /**
@@ -144,29 +149,36 @@ class StorageHandler implements StorageHandlerInterface
     }
 
     /**
-     * Try to get filesystem instance for entity
+     * Try to get filesystem instances for entity
      *
      * @param object $entity
-     * @return FilesystemInterface
+     * @return FilesystemInterface[]
      * @throws ClassDoesNotExistException
      * @throws EntityNotUsingStorableTraitException
      * @throws FilesystemNotFoundException
      */
-    private function _getFilesystemForEntity($entity)
+    private function _getFilesystemsForEntity($entity)
     {
         if ( ! $this->isEntitySupported(get_class($entity))) {
             throw new EntityNotUsingStorableTraitException(
                 sprintf('Class %s is not using the StorableTrait', get_class($entity)));
         }
 
-        try {
-            $filesystem = $this->_mountManager->getFilesystem($entity->getFilesystemMountPrefix());
-        }
-        catch (\LogicException $e) {
-            throw new FilesystemNotFoundException(
-                sprintf('Filesystem with the mount prefix %s could not be found', $entity->getFilesystemMountPrefix()), 0, $e);
+        $filesystems = [];
+
+        $entityPrefixes = is_array($entity->getFilesystemMountPrefix()) ?
+            $entity->getFilesystemMountPrefix() : [$entity->getFilesystemMountPrefix()];
+
+        foreach ($entityPrefixes as $mountPrefix) {
+            try {
+                $filesystems[$mountPrefix] = $this->_mountManager->getFilesystem($mountPrefix);
+            }
+            catch (\LogicException $e) {
+                throw new FilesystemNotFoundException(
+                    sprintf('Filesystem with the mount prefix %s could not be found', $mountPrefix), 0, $e);
+            }
         }
 
-        return $filesystem;
+        return $filesystems;
     }
 }

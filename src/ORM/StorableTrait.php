@@ -40,7 +40,27 @@ trait StorableTrait
      * Get the Flysystem filesystem mount prefix as
      * configured in https://github.com/1up-lab/OneupFlysystemBundle/blob/master/Resources/doc/filesystem_create.md#use-the-mount-manager
      *
-     * @return string
+     * <code>
+     *
+     * // A single filesystem...
+     *
+     * public function getFilesystemMountPrefix()
+     * {
+     *     return 'example_filesystem_mount_prefix';
+     * }
+     *
+     * // Or a list of filesystems...
+     *
+     * public function getFilesystemMountPrefix()
+     * {
+     *     return [
+     *         'example_filesystem_mount_prefix_01',
+     *         'example_filesystem_mount_prefix_02',
+     *     ];
+     * }
+     * </code>
+     *
+     * @return string|array
      */
     abstract public function getFilesystemMountPrefix();
 

@@ -24,7 +24,20 @@ class StorableTraitImpl
 
     public function getFilesystemMountPrefix()
     {
-        return 'test_local';
+        return 'test_local_1';
+    }
+}
+
+class StorableTraitMultipleFilesystemsImpl
+{
+    use StorableTrait;
+
+    public function getFilesystemMountPrefix()
+    {
+        return [
+            'test_local_1',
+            'test_local_2'
+        ];
     }
 }
 
@@ -70,10 +83,14 @@ class StorageHandlerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $localFilesystem = new Filesystem(new Local(TESTS_TEMP_DIR));
+        mkdir(TESTS_TEMP_DIR . '/_2');
+
+        $localFilesystemOne = new Filesystem(new Local(TESTS_TEMP_DIR));
+        $localFilesystemTwo = new Filesystem(new Local(TESTS_TEMP_DIR . '/_2'));
 
         $mountManager = new MountManager([
-            'test_local' => $localFilesystem,
+            'test_local_1' => $localFilesystemOne,
+            'test_local_2' => $localFilesystemTwo,
         ]);
 
         $this->_storageHandler = new StorageHandler(
@@ -117,6 +134,25 @@ class StorageHandlerTest extends \PHPUnit_Framework_TestCase
         $this->_storageHandler->store($entity);
 
         $this->assertFileExists(TESTS_TEMP_DIR . '/sample-01.txt');
+
+        $this->assertEquals('sample-01.txt', $entity->getFileName());
+        $this->assertEquals('sample-01.txt', $entity->getFileStoragePath());
+        $this->assertEquals(445, $entity->getFileSize());
+        $this->assertEquals('text/plain', $entity->getFileMimeType());
+    }
+
+    public function testStoreMultipleLocalHappyPath()
+    {
+        $uploadedFile = $this->_getSampleUploadedFile();
+
+        $entity = (new StorableTraitMultipleFilesystemsImpl())
+            ->setUploadedFile($uploadedFile)
+        ;
+
+        $this->_storageHandler->store($entity);
+
+        $this->assertFileExists(TESTS_TEMP_DIR . '/sample-01.txt');
+        $this->assertFileExists(TESTS_TEMP_DIR . '/_2/sample-01.txt');
 
         $this->assertEquals('sample-01.txt', $entity->getFileName());
         $this->assertEquals('sample-01.txt', $entity->getFileStoragePath());
@@ -235,5 +271,8 @@ class StorageHandlerTest extends \PHPUnit_Framework_TestCase
     {
         @unlink(TESTS_TEMP_DIR . '/sample-01.txt');
         @unlink(TESTS_TEMP_DIR . '/sample-02.txt');
+        @unlink(TESTS_TEMP_DIR . '/_2/sample-01.txt');
+        @unlink(TESTS_TEMP_DIR . '/_2/sample-02.txt');
+        @rmdir(TESTS_TEMP_DIR . '/_2');
     }
 }
