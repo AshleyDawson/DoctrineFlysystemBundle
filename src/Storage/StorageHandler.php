@@ -114,6 +114,18 @@ class StorageHandler implements StorageHandlerInterface
     /**
      * {@inheritdoc}
      */
+    public function delete($entity)
+    {
+        if ( ! $this->isEntitySupported(get_class($entity))) {
+            return;
+        }
+
+        $this->_getFilesystemForEntity($entity)->delete($entity->getFileStoragePath());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isEntitySupported($entityClassName)
     {
         if (isset($this->_entityClassSupported[$entityClassName])) {

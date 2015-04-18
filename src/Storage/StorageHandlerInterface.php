@@ -19,6 +19,14 @@ interface StorageHandlerInterface
     public function store($entity);
 
     /**
+     * Delete a particular entity's uploaded file
+     *
+     * @param object $entity
+     * @return void
+     */
+    public function delete($entity);
+
+    /**
      * Returns TRUE if the entity class is supported
      *
      * @param string $entityClassName

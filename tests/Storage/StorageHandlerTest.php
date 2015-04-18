@@ -128,7 +128,7 @@ class StorageHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException');
 
-        $uploadedFile = $this->_getSampleUploadedFile(TESTS_TEMP_DIR . '/' . md5(time()));
+        $uploadedFile = $this->_getSampleUploadedFile(TESTS_TEMP_DIR . '/' . md5(time() . mt_rand()));
 
         $entity = (new StorableTraitImpl())
             ->setUploadedFile($uploadedFile)
@@ -179,6 +179,34 @@ class StorageHandlerTest extends \PHPUnit_Framework_TestCase
         ;
 
         $this->_storageHandler->store($entity);
+    }
+
+    public function testDeleteHappyPath()
+    {
+        $uploadedFile = $this->_getSampleUploadedFile();
+
+        $entity = (new StorableTraitImpl())
+            ->setUploadedFile($uploadedFile)
+        ;
+
+        $this->_storageHandler->store($entity);
+
+        $this->assertFileExists(TESTS_TEMP_DIR . '/sample-01.txt');
+
+        $this->_storageHandler->delete($entity);
+
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+    }
+
+    public function testDeleteFileDoesNotExist()
+    {
+        //$this->setExpectedException('League\Flysystem\FileNotFoundException');
+
+        $entity = (new StorableTraitImpl())
+            ->setFileStoragePath(md5(time() . mt_rand()) . '.txt')
+        ;
+
+        $this->_storageHandler->delete($entity);
     }
 
     /**
