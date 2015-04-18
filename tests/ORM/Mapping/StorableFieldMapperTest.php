@@ -15,7 +15,7 @@ class StorableTraitImpl
 {
     use StorableTrait;
 
-    public function getFilesystemId()
+    public function getFilesystemAlias()
     {
         return 'dummy_filesystem_id';
     }

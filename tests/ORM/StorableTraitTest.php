@@ -14,7 +14,7 @@ class StorableTraitImpl
 {
     use StorableTrait;
 
-    public function getFilesystemId()
+    public function getFilesystemAlias()
     {
         return 'dummy_filesystem_id';
     }
@@ -49,7 +49,7 @@ class StorableTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testFilesystemIdPresent()
     {
-        $this->assertEquals('dummy_filesystem_id', $this->_storableTraitDummy->getFilesystemId());
+        $this->assertEquals('dummy_filesystem_id', $this->_storableTraitDummy->getFilesystemAlias());
     }
 
     public function testAccessors()

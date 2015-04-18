@@ -18,7 +18,7 @@ class StorableTraitImpl
 {
     use StorableTrait;
 
-    public function getFilesystemId()
+    public function getFilesystemAlias()
     {
         return 'dummy_filesystem_id';
     }
@@ -51,7 +51,11 @@ class StorageHandlerTest extends AbstractDoctrineTestCase
 
     protected function setUp()
     {
-        $this->_storageHandler = new StorageHandler();
+        $this->_storageHandler = new StorageHandler(
+            $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface'),
+            $this->getMock('Symfony\Component\EventDispatcher\EventDispatcherInterface'),
+            true
+        );
     }
 
     public function testIsEntityClassSupported()

@@ -37,12 +37,12 @@ trait StorableTrait
     protected $uploadedFile;
 
     /**
-     * Get the Flysystem filesystem id as
+     * Get the Flysystem filesystem alias id as
      * configured in https://github.com/1up-lab/OneupFlysystemBundle/blob/master/Resources/doc/index.md#step3-configure-your-filesystems
      *
      * @return string
      */
-    abstract public function getFilesystemId();
+    abstract public function getFilesystemAlias();
 
     /**
      * Get fileName

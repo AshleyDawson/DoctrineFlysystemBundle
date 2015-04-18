@@ -10,6 +10,15 @@ namespace AshleyDawson\DoctrineFlysystemBundle\Storage;
 interface StorageHandlerInterface
 {
     /**
+     * Store a particular entity's uploaded file
+     *
+     * @param object $entity
+     * @return void
+     * @throws \AshleyDawson\DoctrineFlysystemBundle\Exception\FailedToWriteFileException
+     */
+    public function store($entity);
+
+    /**
      * Returns TRUE if the entity class is supported
      *
      * @param string $entityClassName
