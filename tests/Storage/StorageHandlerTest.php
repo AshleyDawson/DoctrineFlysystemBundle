@@ -245,6 +245,25 @@ class StorageHandlerTest extends \PHPUnit_Framework_TestCase
         $this->_storageHandler->delete($entity);
     }
 
+    public function testDeleteMultipleLocalHappyPath()
+    {
+        $uploadedFile = $this->_getSampleUploadedFile();
+
+        $entity = (new StorableTraitMultipleFilesystemsImpl())
+            ->setUploadedFile($uploadedFile)
+        ;
+
+        $this->_storageHandler->store($entity);
+
+        $this->assertFileExists(TESTS_TEMP_DIR . '/sample-01.txt');
+        $this->assertFileExists(TESTS_TEMP_DIR . '/_2/sample-01.txt');
+
+        $this->_storageHandler->delete($entity);
+
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/_2/sample-01.txt');
+    }
+
     /**
      * @param string|null $overridePath
      * @return UploadedFile
