@@ -79,7 +79,7 @@ class StorageHandler implements StorageHandlerInterface
 
         $this->_eventDispatcher->dispatch(StorageEvents::PRE_STORE, $event);
 
-        foreach ($filesystems as $prefix => $filesystem) {
+        foreach ($event->getFilesystems() as $prefix => $filesystem) {
 
             // Delete previous file if it exists
             if ($entity->getFileStoragePath() && $filesystem->has($entity->getFileStoragePath()) &&

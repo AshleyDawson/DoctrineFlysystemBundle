@@ -41,7 +41,6 @@ trait StorableTrait
      * configured in https://github.com/1up-lab/OneupFlysystemBundle/blob/master/Resources/doc/filesystem_create.md#use-the-mount-manager
      *
      * <code>
-     *
      * // A single filesystem...
      *
      * public function getFilesystemMountPrefix()

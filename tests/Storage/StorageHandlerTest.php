@@ -4,7 +4,6 @@ namespace AshleyDawson\DoctrineFlysystemBundle\Tests\Storage;
 
 use AshleyDawson\DoctrineFlysystemBundle\ORM\StorableTrait;
 use AshleyDawson\DoctrineFlysystemBundle\Storage\StorageHandler;
-use AshleyDawson\DoctrineFlysystemBundle\Tests\AbstractDoctrineTestCase;
 use Doctrine\ORM\Mapping as ORM;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
@@ -271,19 +270,6 @@ class StorageHandlerTest extends \PHPUnit_Framework_TestCase
     private function _getSampleUploadedFile($overridePath = null)
     {
         return new UploadedFile($overridePath ?: __DIR__ . '/../Resources/fixtures/sample-01.txt', 'sample-01.txt', 'text/plain', 445);
-    }
-
-    /**
-     * Get an array of entity class names that the entity
-     * manager should operate on
-     *
-     * @return array
-     */
-    protected function getEntityClassNames()
-    {
-        return [
-            'AshleyDawson\DoctrineFlysystemBundle\Tests\Storage\StorableTraitImpl',
-        ];
     }
 
     protected function tearDown()
