@@ -2,6 +2,8 @@
 
 namespace AshleyDawson\DoctrineFlysystemBundle\Tests\EventListener;
 
+use AshleyDawson\DoctrineFlysystemBundle\EventListener\StorableEventSubscriber;
+use AshleyDawson\DoctrineFlysystemBundle\ORM\Mapping\StorableFieldMapper;
 use AshleyDawson\DoctrineFlysystemBundle\Storage\StorageHandler;
 use AshleyDawson\DoctrineFlysystemBundle\Tests\AbstractDoctrineTestCase;
 use AshleyDawson\DoctrineFlysystemBundle\ORM\StorableTrait;
@@ -10,6 +12,7 @@ use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use League\Flysystem\MountManager;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Doctrine\Common\EventManager;
 
 /**
  * Class StorableTraitImpl
@@ -120,6 +123,39 @@ class StorableEventListenerTest extends AbstractDoctrineTestCase
             $this->_eventDispatcher,
             true
         );
+    }
+
+    public function getEventManager()
+    {
+        $eventManager = new EventManager();
+
+        $eventManager->addEventSubscriber(new StorableEventSubscriber(
+            new StorableFieldMapper(),
+            $this->_storageHandler
+        ));
+
+        return $eventManager;
+    }
+
+    public function testStorageFieldsMapped()
+    {
+        $entity = (new StorableTraitImpl())
+            ->setName('Foo Bar');
+        ;
+
+        $em = $this->getEntityManager();
+
+        $em->persist($entity);
+
+        $em->flush();
+
+        $em->refresh($entity);
+
+        $fieldMappings = $em->getClassMetadata(get_class($entity))->fieldMappings;
+
+        // todo: check mappings are present and correct
+
+//        print_r($fieldMappings);
     }
 
     public function testPersistenceWithoutFile()
