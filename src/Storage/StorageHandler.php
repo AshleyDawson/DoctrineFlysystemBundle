@@ -11,6 +11,7 @@ use AshleyDawson\DoctrineFlysystemBundle\Exception\FilesystemNotFoundException;
 use League\Flysystem\FilesystemInterface;
 use League\Flysystem\MountManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class StorageHandler
@@ -65,6 +66,10 @@ class StorageHandler implements StorageHandlerInterface
 
         /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile */
         $uploadedFile = $entity->getUploadedFile();
+
+        if ( ! ($uploadedFile instanceof UploadedFile)) {
+            return;
+        }
 
         $filesystems = $this->_getFilesystemsForEntity($entity);
 
