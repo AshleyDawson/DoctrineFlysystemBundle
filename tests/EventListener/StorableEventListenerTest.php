@@ -153,9 +153,12 @@ class StorableEventListenerTest extends AbstractDoctrineTestCase
 
         $fieldMappings = $em->getClassMetadata(get_class($entity))->fieldMappings;
 
-        // todo: check mappings are present and correct
-
-//        print_r($fieldMappings);
+        $this->assertArrayHasKey('_id', $fieldMappings);
+        $this->assertArrayHasKey('_name', $fieldMappings);
+        $this->assertArrayHasKey('fileName', $fieldMappings);
+        $this->assertArrayHasKey('fileStoragePath', $fieldMappings);
+        $this->assertArrayHasKey('fileSize', $fieldMappings);
+        $this->assertArrayHasKey('fileMimeType', $fieldMappings);
     }
 
     public function testPersistenceWithoutFile()
