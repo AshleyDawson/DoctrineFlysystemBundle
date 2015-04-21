@@ -41,7 +41,7 @@ class StoreEvent extends Event
     /**
      * @var FilesystemInterface[]
      */
-    private $_filesystems;
+    private $_filesystems = [];
 
     /**
      * Get _fileName

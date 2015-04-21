@@ -2,6 +2,7 @@
 
 namespace AshleyDawson\DoctrineFlysystemBundle\Storage;
 
+use AshleyDawson\DoctrineFlysystemBundle\Event\DeleteEvent;
 use AshleyDawson\DoctrineFlysystemBundle\Event\StorageEvents;
 use AshleyDawson\DoctrineFlysystemBundle\Event\StoreEvent;
 use AshleyDawson\DoctrineFlysystemBundle\Exception\ClassDoesNotExistException;
@@ -128,11 +129,22 @@ class StorageHandler implements StorageHandlerInterface
             return;
         }
 
-        foreach ($this->_getFilesystemsForEntity($entity) as $filesystem) {
-            if ($filesystem->has($entity->getFileStoragePath()) && null !== $entity->getFileStoragePath()) {
-                $filesystem->delete($entity->getFileStoragePath());
+        $filesystems = $this->_getFilesystemsForEntity($entity);
+
+        $event = (new DeleteEvent())
+            ->setFileStoragePath($entity->getFileStoragePath())
+            ->setFilesystems($filesystems)
+        ;
+
+        $this->_eventDispatcher->dispatch(StorageEvents::PRE_DELETE, $event);
+
+        foreach ($event->getFilesystems() as $filesystem) {
+            if ($filesystem->has($event->getFileStoragePath()) && ($event->getFileStoragePath())) {
+                $filesystem->delete($event->getFileStoragePath());
             }
         }
+
+        $this->_eventDispatcher->dispatch(StorageEvents::POST_DELETE, $event);
     }
 
     /**
