@@ -21,7 +21,11 @@ class Configuration implements ConfigurationInterface
 
         $rootNode = $treeBuilder->root('ashley_dawson_doctrine_flysystem');
 
-        // ...
+        $rootNode
+            ->children()
+                ->booleanNode('delete_old_file_on_update')->defaultTrue()->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }

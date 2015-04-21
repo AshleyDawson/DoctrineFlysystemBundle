@@ -19,7 +19,7 @@
         <service id="ashley_dawson.doctrine_flysystem.storage_handler" class="%ashley_dawson.doctrine_flysystem.storage_handler.class%">
             <argument type="service" id="oneup_flysystem.mount_manager" />
             <argument type="service" id="event_dispatcher" />
-            <argument type="string">1</argument>
+            <argument>%ashley_dawson.doctrine_flysystem.can_delete_old_file%</argument>
         </service>
 
         <service id="ashley_dawson.doctrine_flysystem.storable_event_subscriber" class="%ashley_dawson.doctrine_flysystem.storable_event_subscriber.class%">
