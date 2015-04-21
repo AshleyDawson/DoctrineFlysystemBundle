@@ -4,6 +4,30 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
 
+        <parameter key="ashley_dawson.doctrine_flysystem.storable_field_mapper.class">AshleyDawson\DoctrineFlysystemBundle\ORM\Mapping\StorableFieldMapper</parameter>
+        <parameter key="ashley_dawson.doctrine_flysystem.storage_handler.class">AshleyDawson\DoctrineFlysystemBundle\Storage\StorageHandler</parameter>
+        <parameter key="ashley_dawson.doctrine_flysystem.storable_event_subscriber.class">AshleyDawson\DoctrineFlysystemBundle\EventListener\StorableEventSubscriber</parameter>
+
+    </parameters>
+
+    <services>
+
+        <service id="ashley_dawson.doctrine_flysystem.storable_field_mapper" class="%ashley_dawson.doctrine_flysystem.storable_field_mapper.class%" />
+
+        <service id="ashley_dawson.doctrine_flysystem.storage_handler" class="%ashley_dawson.doctrine_flysystem.storage_handler.class%">
+            <argument type="service" id="oneup_flysystem.mount_manager" />
+            <argument type="service" id="event_dispatcher" />
+            <argument type="string">1</argument>
+        </service>
+
+        <service id="ashley_dawson.doctrine_flysystem.storable_event_subscriber" class="%ashley_dawson.doctrine_flysystem.storable_event_subscriber.class%">
+            <argument type="service" id="ashley_dawson.doctrine_flysystem.storable_field_mapper" />
+            <argument type="service" id="ashley_dawson.doctrine_flysystem.storage_handler" />
+            <tag name="doctrine.event_subscriber" />
+        </service>
+
+    </services>
 
 </container>

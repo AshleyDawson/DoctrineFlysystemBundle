@@ -5,11 +5,11 @@ namespace AshleyDawson\DoctrineFlysystemBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Class DoctrineFlysystemBundle
+ * Class AshleyDawsonDoctrineFlysystemBundle
  *
  * @package AshleyDawson\DoctrineFlysystemBundle
  */
-class DoctrineFlysystemBundle extends Bundle
+class AshleyDawsonDoctrineFlysystemBundle extends Bundle
 {
 
 }
