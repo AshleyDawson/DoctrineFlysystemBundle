@@ -7,11 +7,11 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Config\FileLocator;
 
 /**
- * Class AshleyDawsonDoctrineFlysystemBundleExtension
+ * Class AshleyDawsonDoctrineFlysystemExtension
  *
  * @package AshleyDawson\DoctrineFlysystemBundle\DependencyInjection
  */
-class AshleyDawsonDoctrineFlysystemBundleExtension extends Extension
+class AshleyDawsonDoctrineFlysystemExtension extends Extension
 {
     /**
      * {@inheritdoc}
