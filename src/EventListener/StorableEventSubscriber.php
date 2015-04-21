@@ -5,7 +5,9 @@ namespace AshleyDawson\DoctrineFlysystemBundle\EventListener;
 use AshleyDawson\DoctrineFlysystemBundle\ORM\Mapping\StorableFieldMapperInterface;
 use AshleyDawson\DoctrineFlysystemBundle\Storage\StorageHandlerInterface;
 use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Events;
 
 /**
@@ -45,6 +47,9 @@ class StorableEventSubscriber implements EventSubscriber
     {
         return [
             Events::loadClassMetadata,
+            Events::prePersist,
+            Events::preFlush,
+            Events::preRemove,
         ];
     }
 
@@ -61,5 +66,55 @@ class StorableEventSubscriber implements EventSubscriber
         if ($this->_storageHandler->isEntitySupported($classMetadata->getName())) {
             $this->_storableFieldMapper->mapFields($classMetadata);
         }
+    }
+
+    /**
+     * prePersist event handler
+     *
+     * @param LifecycleEventArgs $args
+     */
+    public function prePersist(LifecycleEventArgs $args)
+    {
+        $this->_storageHandler->store($args->getEntity());
+    }
+
+    /**
+     * preFlush event handler
+     *
+     * @param PreFlushEventArgs $args
+     */
+    public function preFlush(PreFlushEventArgs $args)
+    {
+        $unitOfWork = $args->getEntityManager()->getUnitOfWork();
+
+        foreach ($unitOfWork->getIdentityMap() as $identity) {
+
+            foreach ($identity as $entity) {
+
+                if ($unitOfWork->isScheduledForInsert($entity) || $unitOfWork->isScheduledForDelete($entity)) {
+                    continue;
+                }
+
+                if ($this->_storageHandler->isEntitySupported(get_class($entity))) {
+
+                    $this->_storageHandler->store($entity);
+
+                    if ($entity->getUploadedFile()) {
+                        $unitOfWork->propertyChanged($entity, 'fileName', $entity->getFileName(), $entity->getFileName());
+                        $unitOfWork->scheduleForUpdate($entity);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * preRemove event handler
+     *
+     * @param LifecycleEventArgs $args
+     */
+    public function preRemove(LifecycleEventArgs $args)
+    {
+        $this->_storageHandler->delete($args->getEntity());
     }
 }

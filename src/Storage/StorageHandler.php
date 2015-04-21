@@ -129,7 +129,9 @@ class StorageHandler implements StorageHandlerInterface
         }
 
         foreach ($this->_getFilesystemsForEntity($entity) as $filesystem) {
-            $filesystem->delete($entity->getFileStoragePath());
+            if ($filesystem->has($entity->getFileStoragePath()) && null !== $entity->getFileStoragePath()) {
+                $filesystem->delete($entity->getFileStoragePath());
+            }
         }
     }
 

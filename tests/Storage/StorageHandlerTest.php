@@ -235,8 +235,6 @@ class StorageHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteFileDoesNotExist()
     {
-        $this->setExpectedException('League\Flysystem\FileNotFoundException');
-
         $entity = (new StorableTraitImpl())
             ->setFileStoragePath(md5(time() . mt_rand()) . '.txt')
         ;
