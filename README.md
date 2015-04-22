@@ -381,7 +381,7 @@ Setting `delete_old_file_on_update` to false will mean that when an entity is up
 Override Field Mapping
 ----------------------
 
-The StorableFile trait, when used by entities, maps several fields for storing file metadata. If you need to change these mappings you can do so by implementing `AshleyDawson\DoctrineFlysystemBundle\ORM\Mapping\StorableFieldMapperInterface` and overriding the one that ships with this bundle. This will allow you to define your own mapping strategy for each field. For example:
+The StorableTrait, when used by entities, maps several fields for storing file metadata. If you need to change these mappings you can do so by implementing `AshleyDawson\DoctrineFlysystemBundle\ORM\Mapping\StorableFieldMapperInterface` and overriding the one that ships with this bundle. This will allow you to define your own mapping strategy for each field. For example:
 
 ```php
 <?php
