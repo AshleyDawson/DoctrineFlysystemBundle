@@ -350,7 +350,7 @@ $this->get('event_dispatcher')->addListener(StorageEvents::PRE_STORE, function (
 
     // Build a directory structure like "af/9e"
     $fileStoragePath = implode('/', str_split(substr(md5(mt_rand()), 0, 4), 2));
-    $event->setFileStoragePath(sprintf('/%s/%s.%s', $fileStoragePath, md5(mt_rand()), $event->getFileExtension()));
+    $event->setFileStoragePath(sprintf('/%s/%s.%s', $fileStoragePath, md5(mt_rand()), $event->getUploadedFile()->getClientOriginalExtension()));
 
 });
 ```
