@@ -22,7 +22,7 @@ Doctrine Support
 Introduction
 ------------
 
-I built this bundle to extend [flysystem](https://github.com/thephpleague/flysystem) filesystem abstraction. In fact, this library extends the [FlysystemBundle](https://github.com/1up-lab/OneupFlysystemBundle) for Symfony 2.
+I built this bundle to extend [Flysystem](https://github.com/thephpleague/flysystem) filesystem abstraction. In fact, this library extends the [FlysystemBundle](https://github.com/1up-lab/OneupFlysystemBundle) for Symfony 2.
 
 This bundle implements an "uploaded file" handler on [Doctrine](http://www.doctrine-project.org/) entities, allowing Flysystem to store the file as a part of the Doctrine entity lifecycle.
 
@@ -70,12 +70,12 @@ oneup_flysystem:
             mount: my_filesystem_mount_name
 ```
 
-**Note:** The line `mount: my_filesystem_mount_name` is important as this bundle references filesystems using their mount prefix defined here
+**Note:** The line `mount: my_filesystem_mount_name` is important as this bundle references filesystems using their mount prefix as defined here
 
 Usage
 -----
 
-In order to use this bundle, you must apply the given trait to the entities you'd like to have carry an uploaded file.
+In order to use this bundle, you must apply the given trait to the entities you'd like to have store an uploaded file.
 
 ```php
 <?php
@@ -179,28 +179,34 @@ class Post
 }
 ```
 
-The trait will add four fields to the entity:
+The `getFilesystemMountPrefix()` method defines the Flysystem mount prefix where you'd like the file associated with this entity to be stored as defined in `app/config/config.yml`.
 
-* **file_name** : string
+**Note:** If an array of mount prefixes is returned from getFilesystemMountPrefix() then a copy of the file will be stored in each filesystem
+
+The trait will add four properties to the entity:
+
+* **fileName** : string
     * The original name of the file as uploaded by the client
+    * Column name: file_name
     * E.g. foobar.gif
-* **file_storage_path** : string
+* **fileStoragePath** : string
     * The storage path of the file. Defaults to the file name (above)
+    * Column name: file_storage_path
     * E.g. /path/to/foobar.gif
-* **file_mime_type** : string
+* **fileMimeType** : string
     * The resolved mime type of the file uploaded by the client
+    * Column name: file_mime_type
     * E.g. image/gif
-* **file_size** : integer
+* **fileSize** : integer
     * The file size in bytes
+    * Column name: file_size
     * E.g. 2324
 
 You'll need to update your schema before using this entity.
 
 ```
-app/console doctrine:schema:update [--force | --dump-sql]
+app/console doctrine:schema:update [--dump-sql | --force]
 ```
-
-The `getFilesystemMountPrefix()` abstract method defines the Flysystem mount prefix where you'd like the file associated with this entity to be stored defined in `app/config/config.yml`.
 
 Form Type
 ---------
@@ -359,3 +365,89 @@ Of course, this is a crude example - but it does show how a file (or meta inform
 
 It may also be a good idea to mount a subscriber instead of doing a closure-based implementation as I've done above. You should always aim to deliver a system that promotes the single responsibility principal!
 
+Optional Configuration
+----------------------
+
+Optional configuration parameters are defined in the following way:
+
+```yml
+# app/config/config.yml
+ashley_dawson_doctrine_flysystem:
+    delete_old_file_on_update: true # Default is true
+```
+
+Setting `delete_old_file_on_update` to false will mean that when an entity is updated with a new file, the old file associated with the entity will be deleted.
+
+Override Field Mapping
+----------------------
+
+The StorableFile trait, when used by entities, maps several fields for storing file metadata. If you need to change these mappings you can do so by implementing `AshleyDawson\DoctrineFlysystemBundle\ORM\Mapping\StorableFieldMapperInterface` and overriding the one that ships with this bundle. This will allow you to define your own mapping strategy for each field. For example:
+
+```php
+<?php
+
+namespace Acme\DemoBundle\ORM\Flysystem\Mapping;
+
+use AshleyDawson\DoctrineFlysystemBundle\ORM\Mapping\StorableFieldMapperInterface;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
+
+/**
+ * Class MyStorableFieldMapper
+ *
+ * @package Acme\DemoBundle\ORM\Flysystem\Mapping
+ */
+class MyStorableFieldMapper implements StorableFieldMapperInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function mapFields(ClassMetadataInfo $classMetadata)
+    {
+        $classMetadata
+            ->mapField([
+                'fieldName' => 'fileName',
+                'columnName' => 'file_name',
+                'type' => 'string',
+                'length' => 255,
+                'nullable' => true,
+            ])
+        ;
+
+        $classMetadata
+            ->mapField([
+                'fieldName' => 'fileStoragePath',
+                'columnName' => 'file_storage_path',
+                'type' => 'string',
+                'length' => 255,
+                'nullable' => true,
+            ])
+        ;
+
+        $classMetadata
+            ->mapField([
+                'fieldName' => 'fileSize',
+                'columnName' => 'file_size',
+                'type' => 'integer',
+                'nullable' => true,
+            ])
+        ;
+
+        $classMetadata
+            ->mapField([
+                'fieldName' => 'fileMimeType',
+                'columnName' => 'file_mime_type',
+                'type' => 'string',
+                'length' => 60,
+                'nullable' => true,
+            ])
+        ;
+    }
+}
+```
+
+Then simply configure the service container to use your mapper:
+
+```yml
+# app/config/parameters.yml
+ashley_dawson.doctrine_flysystem.storable_field_mapper.class: Acme\DemoBundle\ORM\Flysystem\Mapping\MyStorableFieldMapper
+```
