@@ -264,7 +264,7 @@ class PostType extends AbstractType
 }
 ```
 
-Note: the field named "uploaded_file" maps to a parameter within the `AshleyDawson\DoctrineGaufretteStorableBundle\Model\UploadedFileTrait`. If you'd like to change this, simply add an accessor to your entity to act as a proxy:
+Note: the field named "uploaded_file" maps to a parameter within the `AshleyDawson\DoctrineFlysystemBundle\ORM\StorableTrait`. If you'd like to change this, simply add an accessor to your entity to act as a proxy:
 
 ```php
 <?php
@@ -272,7 +272,7 @@ Note: the field named "uploaded_file" maps to a parameter within the `AshleyDaws
 namespace Acme\DemoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use AshleyDawson\DoctrineGaufretteStorableBundle\Model\UploadedFileTrait;
+use AshleyDawson\DoctrineFlysystemBundle\ORM\StorableTrait;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -284,9 +284,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class Post
 {
     /**
-     * Use the uploaded file trait
+     * Use the storable file trait
      */
-    use UploadedFileTrait;
+    use StorableTrait;
 
     // ...
 
@@ -346,7 +346,7 @@ A good use case for these events is if you want to change any details of the for
 
 ```php
 // Replace the file storage path with a random md5 hash directory structure, name and file extension
-$this->get('event_dispatcher')->addListener(StorageEvents::PRE_WRITE, function (StoreEvent $event) {
+$this->get('event_dispatcher')->addListener(StorageEvents::PRE_STORE, function (StoreEvent $event) {
 
     // Build a directory structure like "af/9e"
     $fileStoragePath = implode('/', str_split(substr(md5(mt_rand()), 0, 4), 2));
