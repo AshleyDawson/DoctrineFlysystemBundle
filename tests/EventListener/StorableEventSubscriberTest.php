@@ -55,18 +55,6 @@ class StorableTraitImpl
     }
 
     /**
-     * Set _id
-     *
-     * @param int $id
-     * @return StorableTraitImpl
-     */
-    public function setId($id)
-    {
-        $this->_id = $id;
-        return $this;
-    }
-
-    /**
      * Get name
      *
      * @return string
@@ -91,6 +79,108 @@ class StorableTraitImpl
     public function getFilesystemMountPrefix()
     {
         return 'test_local';
+    }
+}
+
+/**
+ * Class AbstractParentExampleImpl
+ *
+ * @package AshleyDawson\DoctrineFlysystemBundle\Tests\EventListener
+ * @ORM\MappedSuperclass
+ */
+abstract class AbstractParentExampleImpl
+{
+    use StorableTrait;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     */
+    private $_id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $_name;
+
+    /**
+     * Get _id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->_id;
+    }
+
+    /**
+     * Get _name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->_name;
+    }
+
+    /**
+     * Set _name
+     *
+     * @param string $name
+     * @return AbstractParentExampleImpl
+     */
+    public function setName($name)
+    {
+        $this->_name = $name;
+        return $this;
+    }
+
+    public function getFilesystemMountPrefix()
+    {
+        return 'test_local';
+    }
+}
+
+/**
+ * Class ChildExampleImpl
+ *
+ * @package AshleyDawson\DoctrineFlysystemBundle\Tests\EventListener
+ * @ORM\Entity
+ */
+class ChildExampleImpl extends AbstractParentExampleImpl
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_of_birth_at", type="datetime")
+     */
+    private $_dateOfBirth;
+
+    /**
+     * Get _dateOfBirth
+     *
+     * @return \DateTime
+     */
+    public function getDateOfBirth()
+    {
+        return $this->_dateOfBirth;
+    }
+
+    /**
+     * Set _dateOfBirth
+     *
+     * @param \DateTime $dateOfBirth
+     * @return ChildExampleImpl
+     */
+    public function setDateOfBirth(\DateTime $dateOfBirth)
+    {
+        $this->_dateOfBirth = $dateOfBirth;
+        return $this;
     }
 }
 
@@ -459,6 +549,49 @@ class StorableEventListenerTest extends AbstractDoctrineTestCase
         $this->assertFileExists(TESTS_TEMP_DIR . $newPath);
     }
 
+    public function testEntityInheritanceWithoutFileUpload()
+    {
+        $entity = (new ChildExampleImpl())
+            ->setDateOfBirth(new \DateTime('1987-04-08'))
+            ->setName('Foobar Baz')
+        ;
+
+        $em = $this->getEntityManager();
+
+        $em->persist($entity);
+
+        $em->flush();
+
+        $em->refresh($entity);
+
+        $this->assertNotNull($entity->getId());
+        $this->assertEquals('Foobar Baz', $entity->getName());
+        $this->assertEquals('1987-04-08', $entity->getDateOfBirth()->format('Y-m-d'));
+    }
+
+    public function testEntityInheritanceWithFileUpload()
+    {
+        $entity = (new ChildExampleImpl())
+            ->setDateOfBirth(new \DateTime('1987-04-09'))
+            ->setName('Foobar Baz Bizzle')
+            ->setUploadedFile(new UploadedFile(__DIR__ . '/../Resources/fixtures/sample-01.txt', 'sample-01.txt', 'text/plain', 445))
+        ;
+
+        $em = $this->getEntityManager();
+
+        $em->persist($entity);
+
+        $em->flush();
+
+        $em->refresh($entity);
+
+        $this->assertNotNull($entity->getId());
+        $this->assertEquals('Foobar Baz Bizzle', $entity->getName());
+        $this->assertEquals('1987-04-09', $entity->getDateOfBirth()->format('Y-m-d'));
+
+        $this->assertFileExists(TESTS_TEMP_DIR . '/sample-01.txt');
+    }
+
     protected function tearDown()
     {
         @unlink(TESTS_TEMP_DIR . '/sample-01.txt');
@@ -477,6 +610,8 @@ class StorableEventListenerTest extends AbstractDoctrineTestCase
     {
         return [
             'AshleyDawson\DoctrineFlysystemBundle\Tests\EventListener\StorableTraitImpl',
+            'AshleyDawson\DoctrineFlysystemBundle\Tests\EventListener\AbstractParentExampleImpl',
+            'AshleyDawson\DoctrineFlysystemBundle\Tests\EventListener\ChildExampleImpl',
         ];
     }
 }

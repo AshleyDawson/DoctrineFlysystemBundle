@@ -63,6 +63,10 @@ class StorableEventSubscriber implements EventSubscriber
         /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo $classMetadata */
         $classMetadata = $args->getClassMetadata();
 
+        if ($classMetadata->isMappedSuperclass) {
+            return;
+        }
+
         if ($this->_storageHandler->isEntitySupported($classMetadata->getName())) {
             $this->_storableFieldMapper->mapFields($classMetadata);
         }

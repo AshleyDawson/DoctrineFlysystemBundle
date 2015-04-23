@@ -156,11 +156,28 @@ class StorageHandler implements StorageHandlerInterface
             return $this->_entityClassSupported[$entityClassName];
         }
 
+        $this->_entityClassSupported[$entityClassName] = false;
+
         try {
-            return $this->_entityClassSupported[$entityClassName] = in_array(
-                'AshleyDawson\DoctrineFlysystemBundle\ORM\StorableTrait',
-                (new \ReflectionClass($entityClassName))->getTraitNames()
-            );
+            $classNames = class_parents($entityClassName);
+            $classNames[$entityClassName] = $entityClassName;
+        }
+        catch (\Exception $e) {
+            throw new ClassDoesNotExistException(sprintf('Class %s does not exist', $entityClassName), 0, $e);
+        }
+
+        try {
+
+            foreach ($classNames as $className) {
+
+                if (in_array('AshleyDawson\DoctrineFlysystemBundle\ORM\StorableTrait',
+                    (new \ReflectionClass($className))->getTraitNames())) {
+                    $this->_entityClassSupported[$entityClassName] = true;
+                    break;
+                }
+            }
+
+            return $this->_entityClassSupported[$entityClassName];
         }
         catch (\ReflectionException $e) {
             throw new ClassDoesNotExistException(sprintf('Class %s does not exist', $entityClassName), 0, $e);
