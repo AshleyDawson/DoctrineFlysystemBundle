@@ -282,6 +282,8 @@ class StorableEventListenerTest extends AbstractDoctrineTestCase
 
     public function testPersistenceWithUploadedFile()
     {
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+
         $entity = (new StorableTraitImpl())
             ->setName('Foo Bar')
             ->setUploadedFile(new UploadedFile(__DIR__ . '/../Resources/fixtures/sample-01.txt', 'sample-01.txt', 'text/plain', 445))
@@ -355,6 +357,8 @@ class StorableEventListenerTest extends AbstractDoctrineTestCase
 
     public function testUpdatingWithOnlyUploadedFile()
     {
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+
         $entity = (new StorableTraitImpl())
             ->setName('Foo Bar')
             ->setUploadedFile(new UploadedFile(__DIR__ . '/../Resources/fixtures/sample-01.txt', 'sample-01.txt', 'text/plain', 445))
@@ -402,6 +406,8 @@ class StorableEventListenerTest extends AbstractDoctrineTestCase
 
     public function testUpdatingWithUploadedFileAndEntityChange()
     {
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+
         $entity = (new StorableTraitImpl())
             ->setName('Foo Bar')
             ->setUploadedFile(new UploadedFile(__DIR__ . '/../Resources/fixtures/sample-01.txt', 'sample-01.txt', 'text/plain', 445))
@@ -484,6 +490,8 @@ class StorableEventListenerTest extends AbstractDoctrineTestCase
 
     public function testDeleteWithFileUpload()
     {
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+
         $entity = (new StorableTraitImpl())
             ->setName('Foo Bar')
             ->setUploadedFile(new UploadedFile(__DIR__ . '/../Resources/fixtures/sample-01.txt', 'sample-01.txt', 'text/plain', 445))
@@ -571,6 +579,8 @@ class StorableEventListenerTest extends AbstractDoctrineTestCase
 
     public function testEntityInheritanceWithFileUpload()
     {
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+
         $entity = (new ChildExampleImpl())
             ->setDateOfBirth(new \DateTime('1987-04-09'))
             ->setName('Foobar Baz Bizzle')
