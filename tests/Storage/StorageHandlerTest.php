@@ -124,6 +124,8 @@ class StorageHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testStoreLocalFileHappyPath()
     {
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+
         $uploadedFile = $this->_getSampleUploadedFile();
 
         $entity = (new StorableTraitImpl())
@@ -142,6 +144,9 @@ class StorageHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testStoreMultipleLocalHappyPath()
     {
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/_2/sample-01.txt');
+
         $uploadedFile = $this->_getSampleUploadedFile();
 
         $entity = (new StorableTraitMultipleFilesystemsImpl())
@@ -174,6 +179,9 @@ class StorageHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testStoreUpdate()
     {
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-02.txt');
+
         $uploadedFile = $this->_getSampleUploadedFile();
 
         $entity = (new StorableTraitImpl())
@@ -218,6 +226,8 @@ class StorageHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteHappyPath()
     {
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+
         $uploadedFile = $this->_getSampleUploadedFile();
 
         $entity = (new StorableTraitImpl())
@@ -244,6 +254,9 @@ class StorageHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteMultipleLocalHappyPath()
     {
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/_2/sample-01.txt');
+
         $uploadedFile = $this->_getSampleUploadedFile();
 
         $entity = (new StorableTraitMultipleFilesystemsImpl())

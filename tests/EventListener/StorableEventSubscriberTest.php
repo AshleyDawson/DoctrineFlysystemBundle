@@ -185,6 +185,112 @@ class ChildExampleImpl extends AbstractParentExampleImpl
 }
 
 /**
+ * Class AbstractParentInheritanceExampleImpl
+ *
+ * @package AshleyDawson\DoctrineFlysystemBundle\Tests\EventListener
+ *
+ * @ORM\Entity
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"child"="ChildInheritanceExampleImpl"})
+ */
+abstract class AbstractParentInheritanceExampleImpl
+{
+    use StorableTrait;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     */
+    private $_id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=130)
+     */
+    private $_title;
+
+    /**
+     * Get _id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->_id;
+    }
+
+    /**
+     * Get _title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->_title;
+    }
+
+    /**
+     * Set _title
+     *
+     * @param string $title
+     * @return AbstractParentInheritanceExampleImpl
+     */
+    public function setTitle($title)
+    {
+        $this->_title = $title;
+        return $this;
+    }
+
+    public function getFilesystemMountPrefix()
+    {
+        return 'test_local';
+    }
+}
+
+/**
+ * Class ChildInheritanceExampleImpl
+ *
+ * @package AshleyDawson\DoctrineFlysystemBundle\Tests\EventListener
+ * @ORM\Entity
+ */
+class ChildInheritanceExampleImpl extends AbstractParentInheritanceExampleImpl
+{
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="height", type="float")
+     */
+    private $_height;
+
+    /**
+     * Get _height
+     *
+     * @return float
+     */
+    public function getHeight()
+    {
+        return $this->_height;
+    }
+
+    /**
+     * Set _height
+     *
+     * @param float $height
+     * @return ChildInheritanceExampleImpl
+     */
+    public function setHeight($height)
+    {
+        $this->_height = $height;
+        return $this;
+    }
+}
+
+/**
  * Class StorableEventListenerTest
  *
  * @package AshleyDawson\DoctrineFlysystemBundle\Tests\EventListener
@@ -602,6 +708,114 @@ class StorableEventListenerTest extends AbstractDoctrineTestCase
         $this->assertFileExists(TESTS_TEMP_DIR . '/sample-01.txt');
     }
 
+    public function testEntityInheritanceDeleteWithFileUpload()
+    {
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+
+        $entity = (new ChildExampleImpl())
+            ->setDateOfBirth(new \DateTime('1987-04-09'))
+            ->setName('Foobar Baz Bizzle')
+            ->setUploadedFile(new UploadedFile(__DIR__ . '/../Resources/fixtures/sample-01.txt', 'sample-01.txt', 'text/plain', 445))
+        ;
+
+        $em = $this->getEntityManager();
+
+        $em->persist($entity);
+
+        $em->flush();
+
+        $em->refresh($entity);
+
+        $this->assertNotNull($entity->getId());
+        $this->assertEquals('Foobar Baz Bizzle', $entity->getName());
+        $this->assertEquals('1987-04-09', $entity->getDateOfBirth()->format('Y-m-d'));
+
+        $this->assertFileExists(TESTS_TEMP_DIR . '/sample-01.txt');
+
+        $em->remove($entity);
+
+        $em->flush();
+
+        $this->assertFalse($em->contains($entity));
+
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+    }
+
+    public function testEntityTableInheritanceWithoutFileUpload()
+    {
+        $entity = (new ChildInheritanceExampleImpl())
+            ->setHeight(160.24)
+            ->setTitle('Floobie Tube')
+        ;
+
+        $em = $this->getEntityManager();
+
+        $em->persist($entity);
+
+        $em->flush();
+
+        $em->refresh($entity);
+
+        $this->assertEquals(160.24, $entity->getHeight());
+        $this->assertEquals('Floobie Tube', $entity->getTitle());
+    }
+
+    public function testEntityTableInheritanceWithFileUpload()
+    {
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+
+        $entity = (new ChildInheritanceExampleImpl())
+            ->setHeight(161.295)
+            ->setTitle('Floobie Tube Crube')
+            ->setUploadedFile(new UploadedFile(__DIR__ . '/../Resources/fixtures/sample-01.txt', 'sample-01.txt', 'text/plain', 445))
+        ;
+
+        $em = $this->getEntityManager();
+
+        $em->persist($entity);
+
+        $em->flush();
+
+        $em->refresh($entity);
+
+        $this->assertEquals(161.295, $entity->getHeight());
+        $this->assertEquals('Floobie Tube Crube', $entity->getTitle());
+
+        $this->assertFileExists(TESTS_TEMP_DIR . '/sample-01.txt');
+    }
+
+    public function testEntityTableInheritanceDeleteWithFileUpload()
+    {
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+
+        $entity = (new ChildInheritanceExampleImpl())
+            ->setHeight(161.295)
+            ->setTitle('Floobie Tube Crube')
+            ->setUploadedFile(new UploadedFile(__DIR__ . '/../Resources/fixtures/sample-01.txt', 'sample-01.txt', 'text/plain', 445))
+        ;
+
+        $em = $this->getEntityManager();
+
+        $em->persist($entity);
+
+        $em->flush();
+
+        $em->refresh($entity);
+
+        $this->assertEquals(161.295, $entity->getHeight());
+        $this->assertEquals('Floobie Tube Crube', $entity->getTitle());
+
+        $this->assertFileExists(TESTS_TEMP_DIR . '/sample-01.txt');
+
+        $em->remove($entity);
+
+        $em->flush();
+
+        $this->assertFalse($em->contains($entity));
+
+        $this->assertFileNotExists(TESTS_TEMP_DIR . '/sample-01.txt');
+    }
+
     protected function tearDown()
     {
         @unlink(TESTS_TEMP_DIR . '/sample-01.txt');
@@ -622,6 +836,8 @@ class StorableEventListenerTest extends AbstractDoctrineTestCase
             'AshleyDawson\DoctrineFlysystemBundle\Tests\EventListener\StorableTraitImpl',
             'AshleyDawson\DoctrineFlysystemBundle\Tests\EventListener\AbstractParentExampleImpl',
             'AshleyDawson\DoctrineFlysystemBundle\Tests\EventListener\ChildExampleImpl',
+            'AshleyDawson\DoctrineFlysystemBundle\Tests\EventListener\AbstractParentInheritanceExampleImpl',
+            'AshleyDawson\DoctrineFlysystemBundle\Tests\EventListener\ChildInheritanceExampleImpl',
         ];
     }
 }

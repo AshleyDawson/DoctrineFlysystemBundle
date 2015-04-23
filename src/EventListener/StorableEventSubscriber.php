@@ -63,7 +63,7 @@ class StorableEventSubscriber implements EventSubscriber
         /** @var \Doctrine\ORM\Mapping\ClassMetadataInfo $classMetadata */
         $classMetadata = $args->getClassMetadata();
 
-        if ($classMetadata->isMappedSuperclass) {
+        if ($classMetadata->isMappedSuperclass || ( ! $classMetadata->isInheritanceTypeNone())) {
             return;
         }
 
