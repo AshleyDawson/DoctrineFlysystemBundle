@@ -2,14 +2,22 @@
 
 namespace AshleyDawson\DoctrineFlysystemBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use AshleyDawson\MultiBundle\AbstractMultiBundle;
 
 /**
  * Class AshleyDawsonDoctrineFlysystemBundle
  *
  * @package AshleyDawson\DoctrineFlysystemBundle
  */
-class AshleyDawsonDoctrineFlysystemBundle extends Bundle
+class AshleyDawsonDoctrineFlysystemBundle extends AbstractMultiBundle
 {
-
+    /**
+     * {@inheritdoc}
+     */
+    protected static function getBundles()
+    {
+        return [
+            new \Oneup\FlysystemBundle\OneupFlysystemBundle(),
+        ];
+    }
 }

@@ -4,8 +4,52 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f22b2279f972f343bbd8c4cf6a9ab4c1",
+    "hash": "9e4b70701b837907440a4c37b7e45e43",
     "packages": [
+        {
+            "name": "ashleydawson/multibundle",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/AshleyDawson/MultiBundle.git",
+                "reference": "0db7d589f32e79ee920e03620202d61d1b804d60"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/AshleyDawson/MultiBundle/zipball/0db7d589f32e79ee920e03620202d61d1b804d60",
+                "reference": "0db7d589f32e79ee920e03620202d61d1b804d60",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3",
+                "symfony/symfony": "~2.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AshleyDawson\\MultiBundle\\": "lib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Ashley Dawson",
+                    "email": "ashley@ashleydawson.co.uk"
+                }
+            ],
+            "description": "Register multiple bundles within the Symfony2 kernel",
+            "keywords": [
+                "Symfony2",
+                "bundle",
+                "dependencies",
+                "multiple",
+                "symfony"
+            ],
+            "time": "2015-04-30 07:52:48"
+        },
         {
             "name": "doctrine/annotations",
             "version": "v1.2.4",
@@ -608,50 +652,55 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.3",
+            "version": "0.5.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "3c2400a99ccc3be6884d40361890010449c6b447"
+                "reference": "e046fe60d761e30691c642c9cc6a4089f724e805"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/3c2400a99ccc3be6884d40361890010449c6b447",
-                "reference": "3c2400a99ccc3be6884d40361890010449c6b447",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/e046fe60d761e30691c642c9cc6a4089f724e805",
+                "reference": "e046fe60d761e30691c642c9cc6a4089f724e805",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0"
             },
             "require-dev": {
+                "aws/aws-sdk-php": "~2.4",
+                "barracuda/copy": "~1.1.4",
+                "dropbox/dropbox-sdk": "~1.1.1",
                 "ext-fileinfo": "*",
+                "guzzlehttp/guzzle": "~4.0",
+                "league/event": "~1.0",
                 "league/phpunit-coverage-listener": "~1.1",
                 "mockery/mockery": "~0.9",
+                "phpseclib/phpseclib": "~0.3.5",
                 "phpspec/phpspec": "~2.0",
-                "phpspec/prophecy-phpunit": "~1.0",
-                "phpunit/phpunit": "~4.1",
+                "phpunit/phpunit": "~4.0",
                 "predis/predis": "~1.0",
+                "rackspace/php-opencloud": "~1.10.0",
+                "sabre/dav": "~2.0.2",
                 "tedivm/stash": "~0.12.0"
             },
             "suggest": {
+                "aws/aws-sdk-php": "Allows you to use AWS S3 storage",
+                "barracuda/copy": "Allows you to use Copy.com storage",
+                "dropbox/dropbox-sdk": "Allows you to use Dropbox storage",
                 "ext-fileinfo": "Required for MimeType",
-                "league/flysystem-aws-s3-v2": "Allows you to use S3 storage with AWS SDK v2",
-                "league/flysystem-aws-s3-v3": "Allows you to use S3 storage with AWS SDK v3",
-                "league/flysystem-azure": "Allows you to use Windows Azure Blob storage",
-                "league/flysystem-cached-adapter": "Flysystem adapter decorator for metadata caching",
-                "league/flysystem-copy": "Allows you to use Copy.com storage",
-                "league/flysystem-dropbox": "Allows you to use Dropbox storage",
-                "league/flysystem-eventable-filesystem": "Allows you to use EventableFilesystem",
-                "league/flysystem-rackspace": "Allows you to use Rackspace Cloud Files",
-                "league/flysystem-sftp": "Allows you to use SFTP server storage via phpseclib",
-                "league/flysystem-webdav": "Allows you to use WebDAV storage",
-                "league/flysystem-ziparchive": "Allows you to use ZipArchive adapter",
-                "predis/predis": "Allows you to use Predis for caching"
+                "guzzlehttp/guzzle": "Allows you to use http files (reading only)",
+                "league/event": "Required for EventableFilesystem",
+                "phpseclib/phpseclib": "Allows SFTP server storage",
+                "predis/predis": "Allows you to use Predis for caching",
+                "rackspace/php-opencloud": "Allows you to use Rackspace Cloud Files",
+                "sabre/dav": "Enables WebDav support",
+                "tedivm/stash": "Allows you to use Stash as cache implementation"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev"
+                    "dev-master": "0.5-dev"
                 }
             },
             "autoload": {
@@ -687,53 +736,31 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2015-03-29 14:01:43"
+            "time": "2014-11-05 13:39:29"
         },
         {
             "name": "oneup/flysystem-bundle",
-            "version": "v1.0.0-beta",
+            "version": "v0.4.2",
             "target-dir": "Oneup/FlysystemBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/1up-lab/OneupFlysystemBundle.git",
-                "reference": "93e5ecb7e128b386c40d964585d5742db54437f0"
+                "reference": "c1fc28faed43ddd1168fcce654876a70f7e07925"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/1up-lab/OneupFlysystemBundle/zipball/93e5ecb7e128b386c40d964585d5742db54437f0",
-                "reference": "93e5ecb7e128b386c40d964585d5742db54437f0",
+                "url": "https://api.github.com/repos/1up-lab/OneupFlysystemBundle/zipball/c1fc28faed43ddd1168fcce654876a70f7e07925",
+                "reference": "c1fc28faed43ddd1168fcce654876a70f7e07925",
                 "shasum": ""
             },
             "require": {
-                "league/flysystem": "~1.0",
-                "php": ">=5.4.0",
+                "league/flysystem": "~0.4",
                 "symfony/framework-bundle": ">=2.0"
             },
             "require-dev": {
-                "league/flysystem-aws-s3-v2": "~1.0",
-                "league/flysystem-cached-adapter": "~1.0",
-                "league/flysystem-copy": "~1.0",
-                "league/flysystem-dropbox": "~1.0",
-                "league/flysystem-gridfs": "~1.0",
-                "league/flysystem-rackspace": "~1.0",
-                "league/flysystem-sftp": "~1.0",
-                "league/flysystem-webdav": "~1.0",
-                "league/flysystem-ziparchive": "~1.0",
-                "phpunit/phpunit": "4.4.*",
+                "phpunit/phpunit": "3.7.*",
                 "symfony/browser-kit": ">=2.0",
                 "symfony/finder": ">=2.0"
-            },
-            "suggest": {
-                "ext-fileinfo": "Required for MimeType",
-                "league/flysystem-aws-s3-v2": "Use S3 storage with AWS SDK v2",
-                "league/flysystem-cached-adapter": "Flysystem adapter decorator for metadata caching",
-                "league/flysystem-copy": "Allows you to use Copy.com storage",
-                "league/flysystem-dropbox": "Use Dropbox storage",
-                "league/flysystem-gridfs": "Allows you to use GridFS adapter",
-                "league/flysystem-rackspace": "Allows you to use Rackspace Cloud Files",
-                "league/flysystem-sftp": "Allows SFTP server storage via phpseclib",
-                "league/flysystem-webdav": "Allows you to use WebDAV storage",
-                "league/flysystem-ziparchive": "Allows you to use ZipArchive adapter"
             },
             "type": "symfony-bundle",
             "autoload": {
@@ -761,7 +788,7 @@
                 "abstraction",
                 "filesystem"
             ],
-            "time": "2015-01-26 15:34:25"
+            "time": "2015-01-07 16:01:59"
         },
         {
             "name": "psr/log",
@@ -1673,9 +1700,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "oneup/flysystem-bundle": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

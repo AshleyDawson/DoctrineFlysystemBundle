@@ -41,14 +41,35 @@ You can install the Doctrine Flysystem Bundle via Composer. To do that, simply r
 }
 ```
 
-Run composer update to install the package. Then you'll need to register the bundle in your `app/AppKernel.php`:
+Run composer update to install the package. Then you'll need to register the bundle in your `app/AppKernel.php`. The first
+of these examples uses the MultiBundle library to register the bundle and it's dependencies. For more information see the 
+[MultiBundle docs](https://github.com/AshleyDawson/MultiBundle).
 
 ```php
+// app/AppKernel.php
+
+// ...
+
+// Do this after the production bundles are set
+\AshleyDawson\DoctrineFlysystemBundle\AshleyDawsonDoctrineFlysystemBundle::registerInto($bundles);
+
+// ...
+```
+
+Or you could do this the classic way:
+
+```php
+// app/AppKernel.php
+
+// ...
+
 $bundles = array(
     // ...
     new Oneup\FlysystemBundle\OneupFlysystemBundle(), // Doctrine Flysystem Bundle depends on this
     new AshleyDawson\DoctrineFlysystemBundle\AshleyDawsonDoctrineFlysystemBundle(),
 );
+
+// ...
 ```
 
 Configuration
