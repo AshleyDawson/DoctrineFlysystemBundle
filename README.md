@@ -48,7 +48,9 @@ of these examples uses the MultiBundle library to register the bundle and it's d
 ```php
 // app/AppKernel.php
 
-// ...
+$bundles = array(
+    // ...,
+);
 
 // Do this after the production bundles are set
 \AshleyDawson\DoctrineFlysystemBundle\AshleyDawsonDoctrineFlysystemBundle::registerInto($bundles);
