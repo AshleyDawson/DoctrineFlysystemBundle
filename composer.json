@@ -21,7 +21,8 @@
     "php": ">=5.4",
     "symfony/symfony": "~2.3",
     "doctrine/orm": "~2.3",
-    "oneup/flysystem-bundle": "0.4.*"
+    "oneup/flysystem-bundle": "0.4.*",
+    "ashleydawson/multibundle": "~1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "4.2.6"

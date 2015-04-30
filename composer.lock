@@ -4,8 +4,52 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c43830cfcbafa9f70ba8f0d3757f614d",
+    "hash": "9e4b70701b837907440a4c37b7e45e43",
     "packages": [
+        {
+            "name": "ashleydawson/multibundle",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/AshleyDawson/MultiBundle.git",
+                "reference": "0db7d589f32e79ee920e03620202d61d1b804d60"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/AshleyDawson/MultiBundle/zipball/0db7d589f32e79ee920e03620202d61d1b804d60",
+                "reference": "0db7d589f32e79ee920e03620202d61d1b804d60",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3",
+                "symfony/symfony": "~2.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AshleyDawson\\MultiBundle\\": "lib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Ashley Dawson",
+                    "email": "ashley@ashleydawson.co.uk"
+                }
+            ],
+            "description": "Register multiple bundles within the Symfony2 kernel",
+            "keywords": [
+                "Symfony2",
+                "bundle",
+                "dependencies",
+                "multiple",
+                "symfony"
+            ],
+            "time": "2015-04-30 07:52:48"
+        },
         {
             "name": "doctrine/annotations",
             "version": "v1.2.4",
