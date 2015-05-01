@@ -3,6 +3,8 @@ Doctrine Flysystem Bundle
 
 [![Build Status](https://travis-ci.org/AshleyDawson/DoctrineFlysystemBundle.svg?branch=develop)](https://travis-ci.org/AshleyDawson/DoctrineFlysystemBundle)
 
+[![knpbundles.com](http://knpbundles.com/AshleyDawson/DoctrineFlysystemBundle/badge-short)](http://knpbundles.com/AshleyDawson/DoctrineFlysystemBundle)
+
 Add a flysystem storage behaviour to Doctrine entities in Symfony 2
 
 Requirements
