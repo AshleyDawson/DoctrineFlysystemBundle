@@ -2,6 +2,7 @@
   "name": "ashleydawson/doctrine-flysystem-bundle",
   "type": "symfony-bundle",
   "description": "Add a flysystem storage behaviour (trait) to Doctrine entities in Symfony 2",
+  "license": "MIT",
   "keywords": [
     "behaviors",
     "doctrine2",
