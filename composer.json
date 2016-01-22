@@ -20,8 +20,8 @@
   ],
   "require": {
     "php": ">=5.4",
-    "symfony/symfony": "~2.3",
-    "doctrine/orm": "~2.3",
+    "symfony/symfony": "~2.3|~3.0",
+    "doctrine/orm": "~2.3|~3.0",
     "oneup/flysystem-bundle": "~1.0",
     "ashleydawson/multibundle": "~1.0"
   },
