@@ -136,6 +136,10 @@ trait StorableTrait
      */
     public function getFileSize()
     {
+        if (-1 === $this->fileSize && $this->uploadedFile) {
+            return $this->uploadedFile->getSize();
+        }
+
         return $this->fileSize;
     }
 
@@ -170,6 +174,7 @@ trait StorableTrait
     public function setUploadedFile(UploadedFile $uploadedFile = null)
     {
         $this->uploadedFile = $uploadedFile;
+        $this->fileSize = -1; // Set to -1 to force ORM update
         return $this;
     }
 }

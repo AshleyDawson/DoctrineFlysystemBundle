@@ -13,8 +13,7 @@ interface StorageHandlerInterface
      * Store a particular entity's uploaded file
      *
      * @param object $entity
-     * @return void
-     * @throws \AshleyDawson\DoctrineFlysystemBundle\Exception\FailedToWriteFileException
+     * @return bool TRUE if file was stored
      */
     public function store($entity);
 
@@ -22,7 +21,7 @@ interface StorageHandlerInterface
      * Delete a particular entity's uploaded file
      *
      * @param object $entity
-     * @return void
+     * @return bool TRUE if file was deleted
      */
     public function delete($entity);
 

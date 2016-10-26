@@ -62,14 +62,14 @@ class StorageHandler implements StorageHandlerInterface
     public function store($entity)
     {
         if ( ! $this->isEntitySupported(get_class($entity))) {
-            return;
+            return false;
         }
 
         /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile */
         $uploadedFile = $entity->getUploadedFile();
 
         if ( ! ($uploadedFile instanceof UploadedFile)) {
-            return;
+            return false;
         }
 
         $filesystems = $this->_getFilesystemsForEntity($entity);
@@ -85,6 +85,7 @@ class StorageHandler implements StorageHandlerInterface
 
         $this->_eventDispatcher->dispatch(StorageEvents::PRE_STORE, $event);
 
+        $storageCount = 0;
         foreach ($event->getFilesystems() as $prefix => $filesystem) {
 
             // Delete previous file if it exists
@@ -108,6 +109,8 @@ class StorageHandler implements StorageHandlerInterface
                         $event->getFileStoragePath(), $prefix)
                 );
             }
+
+            $storageCount ++;
         }
 
         $this->_eventDispatcher->dispatch(StorageEvents::POST_STORE, $event);
@@ -118,6 +121,8 @@ class StorageHandler implements StorageHandlerInterface
             ->setFileSize($event->getFileSize())
             ->setFileMimeType($event->getFileMimeType())
         ;
+
+        return ($storageCount > 0);
     }
 
     /**
@@ -126,7 +131,7 @@ class StorageHandler implements StorageHandlerInterface
     public function delete($entity)
     {
         if ( ! $this->isEntitySupported(get_class($entity))) {
-            return;
+            return false;
         }
 
         $filesystems = $this->_getFilesystemsForEntity($entity);
@@ -145,6 +150,8 @@ class StorageHandler implements StorageHandlerInterface
         }
 
         $this->_eventDispatcher->dispatch(StorageEvents::POST_DELETE, $event);
+
+        return true;
     }
 
     /**

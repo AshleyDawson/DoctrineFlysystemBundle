@@ -7,7 +7,7 @@ use AshleyDawson\DoctrineFlysystemBundle\Storage\StorageHandlerInterface;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-use Doctrine\ORM\Event\PreFlushEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 
 /**
@@ -48,7 +48,7 @@ class StorableEventSubscriber implements EventSubscriber
         return [
             Events::loadClassMetadata,
             Events::prePersist,
-            Events::preFlush,
+            Events::preUpdate,
             Events::preRemove,
         ];
     }
@@ -79,33 +79,13 @@ class StorableEventSubscriber implements EventSubscriber
     }
 
     /**
-     * preFlush event handler
+     * prePersist event handler
      *
-     * @param PreFlushEventArgs $args
+     * @param PreUpdateEventArgs $args
      */
-    public function preFlush(PreFlushEventArgs $args)
+    public function preUpdate(PreUpdateEventArgs $args)
     {
-        $unitOfWork = $args->getEntityManager()->getUnitOfWork();
-
-        foreach ($unitOfWork->getIdentityMap() as $identity) {
-
-            foreach ($identity as $entity) {
-
-                if ($unitOfWork->isScheduledForInsert($entity) || $unitOfWork->isScheduledForDelete($entity)) {
-                    continue;
-                }
-
-                if ($this->_storageHandler->isEntitySupported(get_class($entity))) {
-
-                    $this->_storageHandler->store($entity);
-
-                    if ($entity->getUploadedFile()) {
-                        $unitOfWork->propertyChanged($entity, 'fileName', $entity->getFileName(), $entity->getFileName());
-                        $unitOfWork->scheduleForUpdate($entity);
-                    }
-                }
-            }
-        }
+        $this->_storageHandler->store($args->getEntity());
     }
 
     /**
