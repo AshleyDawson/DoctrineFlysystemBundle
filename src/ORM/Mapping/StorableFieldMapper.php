@@ -57,7 +57,7 @@ class StorableFieldMapper implements StorableFieldMapperInterface
                     'fieldName' => 'fileMimeType',
                     'columnName' => 'file_mime_type',
                     'type' => 'string',
-                    'length' => 60,
+                    'length' => 255,
                     'nullable' => true,
                 ])
             ;
