@@ -71,6 +71,9 @@ class StorageHandler implements StorageHandlerInterface
         if ( ! ($uploadedFile instanceof UploadedFile)) {
             return false;
         }
+        
+        $uploadedFile = clone $uploadedFile;
+        $entity->setUploadedFile(null);
 
         $filesystems = $this->_getFilesystemsForEntity($entity);
 
