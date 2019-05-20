@@ -633,9 +633,11 @@ class StorableEventListenerTest extends AbstractDoctrineTestCase
     public function testPreStoreEvent()
     {
         $newPath = '/doctrine-flysystem/pre-store-event-test/testing.txt';
+        $entityId = null;
 
-        $this->_eventDispatcher->addListener(StorageEvents::PRE_STORE, function (StoreEvent $event) use ($newPath) {
+        $this->_eventDispatcher->addListener(StorageEvents::PRE_STORE, function (StoreEvent $event) use ($newPath, &$entityId) {
             $event->setFileStoragePath($newPath);
+            $entityId = $event->getEntity()->getId();
         });
 
         $entity = (new StorableTraitImpl())
@@ -648,6 +650,8 @@ class StorableEventListenerTest extends AbstractDoctrineTestCase
         $em->persist($entity);
 
         $em->flush();
+
+        $this->assertEquals(1, $entityId);
 
         $em->refresh($entity);
 
