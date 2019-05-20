@@ -14,11 +14,6 @@ use League\Flysystem\FilesystemInterface;
 class StoreEvent extends Event
 {
     /**
-     * @var object
-     */
-    private $_entity;
-
-    /**
      * @var string
      */
     private $_fileName;
@@ -47,29 +42,6 @@ class StoreEvent extends Event
      * @var FilesystemInterface[]
      */
     private $_filesystems = [];
-
-    /**
-     * Set _entity
-     *
-     * @param $entity
-     * @return StoreEvent
-     */
-    public function setEntity($entity)
-    {
-        $this->_entity = $entity;
-
-        return $this;
-    }
-
-    /**
-     * Get _entity
-     *
-     * @return object
-     */
-    public function getEntity()
-    {
-        return $this->_entity;
-    }
 
     /**
      * Get _fileName

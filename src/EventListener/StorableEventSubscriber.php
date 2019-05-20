@@ -47,8 +47,8 @@ class StorableEventSubscriber implements EventSubscriber
     {
         return [
             Events::loadClassMetadata,
-            Events::postPersist,
-            Events::postUpdate,
+            Events::prePersist,
+            Events::preUpdate,
             Events::preRemove,
         ];
     }
@@ -73,7 +73,7 @@ class StorableEventSubscriber implements EventSubscriber
      *
      * @param LifecycleEventArgs $args
      */
-    public function postPersist(LifecycleEventArgs $args)
+    public function prePersist(LifecycleEventArgs $args)
     {
         $this->_storageHandler->store($args->getEntity());
     }
@@ -83,7 +83,7 @@ class StorableEventSubscriber implements EventSubscriber
      *
      * @param PreUpdateEventArgs $args
      */
-    public function postUpdate(LifecycleEventArgs $args)
+    public function preUpdate(PreUpdateEventArgs $args)
     {
         $this->_storageHandler->store($args->getEntity());
     }

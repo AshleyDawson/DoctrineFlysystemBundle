@@ -75,7 +75,6 @@ class StorageHandler implements StorageHandlerInterface
         $filesystems = $this->_getFilesystemsForEntity($entity);
 
         $event = (new StoreEvent())
-            ->setEntity($entity)
             ->setFileName($uploadedFile->getClientOriginalName())
             ->setFileStoragePath($uploadedFile->getClientOriginalName())
             ->setFileSize($uploadedFile->getSize())
